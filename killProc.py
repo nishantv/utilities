@@ -5,20 +5,26 @@ The optional arguments are process names delimited by spaces
 If no arguments are given, gyachi will be killed
 """
 
-import sys
+import sys, platform
 from subprocess import call  
 
-def killProc(process = "gyachi"):
-	call("pkill %s"%process, shell=True)  
-	print "Killed %s"%process
+
+
+def killProcWin(process = "gyachi"):
+	for process in sys.argv[1:]:
+		call("taskkill /IM %s.exe /F"%process, shell=True)  
+		#print "Killed %s"%process
+	
 
 def main():
 #	print len(sys.argv)
 	if len(sys.argv) > 1:
-		for process in sys.argv[1:]:
-			killProc(process)
-	else:
-		killProc()
+		if platform.system() == 'Windows':
+			print '\nDetected platform %s %s\n'%(platform.system(), \
+			platform.release())
+			killProcWin(sys.argv)
+
+
 
 if __name__ == "__main__":
 	main()
